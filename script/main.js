@@ -1,3 +1,5 @@
+const IMG_URL = 'https://image.tmdb.org/t/p/w185_and_h278_bestv2';
+
 const leftMenu = document.querySelector('.left-menu');
 const hamburger = document.querySelector('.hamburger');
 const tvShowsList = document.querySelector('.tv-shows__list');
@@ -19,20 +21,35 @@ const DBService = class {
 };
 
 const renderCard = response => {
+    console.log(response)
+    tvShowsList.textContent='';     //clear film list
 
     response.results.forEach(item => {
-        tvShowsList.textContent='';     //clear film list
+        
+        const {
+                backdrop_path : backdrop,
+                name : title, 
+                poster_path : poster, 
+                vote_average: vote
+                } = item;
+        
+        const posterIMG = poster ? IMG_URL + poster : 'img/no-poster.jpg' ;
+        const backdropIMG = backdrop ? IMG_URL + backdrop : 'img/no-poster.jpg';
+
+        const voteDel = tvShowsList.querySelector('.tv-card__vote');
+        const voteElem = (vote === 0) ? (voteDel.style.visibility = 'none') : vote;
+        //const voteElem = (vote === 0) ? voteDel.classList.add('hide') : vote;
 
         const card = document.createElement('li')
-        card.classList.add('tv-shows__item');
+        card.className = 'tv-shows__item';
         card.innerHTML = `
             <a href="#" class="tv-card">
-            <span class="tv-card__vote">8.1</span>
+            <span class="tv-card__vote">${voteElem}</span>
             <img class="tv-card__img"
-                src="https://image.tmdb.org/t/p/w185_and_h278_bestv2/o9XEd15zRzef9SlOuJYPdS5HCdK.jpg"
-                data-backdrop="https://image.tmdb.org/t/p/w185_and_h278_bestv2/lXWgVQ1whAEMz4Ju88UyPoveIKD.jpg"
-                alt="Звёздные войны: Войны клонов">
-            <h4 class="tv-card__head">Звёздные войны: Войны клонов</h4>
+                src="${posterIMG}"
+                data-backdrop="${backdropIMG}"
+                alt="${title}">
+            <h4 class="tv-card__head">${title}</h4>
             </a>
         `;
 
